@@ -11,6 +11,7 @@
 
 /* Helper definitions */
 DIGIT [0-9]
+INT 0|([1-9]{DIGIT}*)
 
 /* Scanner options, line number generation */
 %option yylineno
@@ -31,6 +32,11 @@ DIGIT [0-9]
 [\r\n]+
 [ \t]+      printf("Whitespace, length %lu\n", yyleng);
 
+var|while|boolean|float|if|TRUE|int|print|FALSE|string|read	{
+            printf( "Reserved word: %s\n", yytext );
+}
+
+
 "+"         printf("Plus\n");
 "-"         printf("Minus\n");
 "*"         printf("Times\n");
@@ -38,11 +44,20 @@ DIGIT [0-9]
 "("         printf("Left parenthesis\n");
 ")"         printf("Right parenthesis\n");
 
-0|([1-9]{DIGIT}*) {
+{INT} {
 	    printf ("Integer constant: %s\n", yytext);
 }
+
+{INT}"."{DIGIT}+	{
+			printf ("Float constant: %s\n", yytext);
+}
+
 [a-zA-Z_][a-zA-Z0-9_]* {
 	    printf ("Identifier: %s\n", yytext);
+}
+
+"//"[^\n]*"\n"	{
+	    printf ("Comment: %s\n", yytext);
 }
 
 . 	    { fprintf (stderr, "Error: (line %d) unexpected character '%s'\n", yylineno, yytext); exit(1); }

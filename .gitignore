@@ -1,0 +1,4 @@
+src/*.o
+src/lex.yy.c
+src/parser.tab.*
+src/mini
