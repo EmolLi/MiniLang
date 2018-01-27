@@ -12,6 +12,10 @@
 /* Helper definitions */
 DIGIT [0-9]
 INT 0|([1-9]{DIGIT}*)
+SPACE [ \t]+
+ALPHA [a-zA-Z]
+SYMBOL "~"|"@"|"#"|"%"|"^"|"&"|"*"|"-"|"+"|"/"|"`"|"<"|">"|"="|"_"|"|"|"'"|"."|","|";"|":"|"!"|"?"|"{"|"}"|"["|"]"|"("|")"
+ESCAPE \\a|\\b|\\f|\\n|\\r|\\t|\\v|\\\"|\\\\
 
 /* Scanner options, line number generation */
 %option yylineno
@@ -30,7 +34,7 @@ INT 0|([1-9]{DIGIT}*)
  */
 %%
 [\r\n]+
-[ \t]+      printf("Whitespace, length %lu\n", yyleng);
+{SPACE}      printf("Whitespace, length %lu\n", yyleng);
 
 var|while|boolean|float|if|TRUE|int|print|FALSE|string|read	{
             printf( "Reserved word: %s\n", yytext );
@@ -59,6 +63,11 @@ var|while|boolean|float|if|TRUE|int|print|FALSE|string|read	{
 "//"[^\n]*"\n"	{
 	    printf ("Comment: %s\n", yytext);
 }
+
+"\""({ALPHA}|{DIGIT}|{SPACE}|{SYMBOL}|{ESCAPE})*"\"" {
+      printf ("String: %s\n", yytext);
+}
+
 
 . 	    { fprintf (stderr, "Error: (line %d) unexpected character '%s'\n", yylineno, yytext); exit(1); }
 %%
