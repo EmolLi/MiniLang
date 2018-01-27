@@ -7,6 +7,10 @@
 /* Code section */
 %{
 #include <stdio.h>
+#include <string.h>
+
+#include "parser.tab.h"
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 %}
 
 /* Helper definitions */
@@ -19,6 +23,8 @@ ESCAPE \\a|\\b|\\f|\\n|\\r|\\t|\\v|\\\"|\\\\
 
 /* Scanner options, line number generation */
 %option yylineno
+%option noinput
+%option nounput
 
 /* The second section of a flex file contains the regular expressions, using helper definitions
  * where appropriate ({<helper name>}). Sections in flex are divided by %%.
@@ -34,49 +40,48 @@ ESCAPE \\a|\\b|\\f|\\n|\\r|\\t|\\v|\\\"|\\\\
  */
 %%
 [\r\n]+
-{SPACE}      printf("Whitespace, length %lu\n", yyleng);
+{SPACE}      /* ignore white space*/
 
-var|while|boolean|float|if|TRUE|int|print|FALSE|string|read	{
-            printf( "Reserved word: %s\n", yytext );
-}
+var          return tVAR;
+while        return tWHILE;
+boolean      return tBOOLEAN;
+float        return tFLOAT;
+if           return tIF;
+TRUE         return tTRUE;
+FALSE        return tFALSE;
+int          return tINT;
+print        return tPRINT;
+string       return tSTRING;
+read         return tREAD;
 
 
-"+"         printf("Plus\n");
-"-"         printf("Minus\n");
-"*"         printf("Times\n");
-"/"         printf("Divide\n");
-"("         printf("Left parenthesis\n");
-")"         printf("Right parenthesis\n");
+"+"         return '+';
+"-"         return '-';
+"*"         return '*';
+"/"         return '/';
+"("         return '(';
+")"         return ')';
 
 {INT} {
-	    printf ("Integer constant: %s\n", yytext);
+	    return tINTVAL;
 }
 
 {INT}"."{DIGIT}+	{
-			printf ("Float constant: %s\n", yytext);
+			return tFLOATVAL;
 }
 
 [a-zA-Z_][a-zA-Z0-9_]* {
-	    printf ("Identifier: %s\n", yytext);
+	    return tIDENTIFIER;
 }
 
 "//"[^\n]*"\n"	{
-	    printf ("Comment: %s\n", yytext);
+	    return tCOMMENT;
 }
 
 "\""({ALPHA}|{DIGIT}|{SPACE}|{SYMBOL}|{ESCAPE})*"\"" {
-      printf ("String: %s\n", yytext);
+      return tSTRINGVAL;
 }
 
 
 . 	    { fprintf (stderr, "Error: (line %d) unexpected character '%s'\n", yylineno, yytext); exit(1); }
 %%
-
-// The final section of a flex file contains the user code
-int main()
-{
-	// Invoke the scanner using yylex(). Since there is no parser, this will execute unti
-	// the end of file
-	yylex();
-	return 0;
-}
