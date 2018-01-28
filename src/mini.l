@@ -47,6 +47,7 @@ while        return tWHILE;
 boolean      return tBOOLEAN;
 float        return tFLOAT;
 if           return tIF;
+else         return tELSE;
 TRUE         return tTRUE;
 FALSE        return tFALSE;
 int          return tINT;
@@ -61,24 +62,35 @@ read         return tREAD;
 "/"         return '/';
 "("         return '(';
 ")"         return ')';
+":"         return ':';
+";"         return ';';
+"="         return '=';
+"!"         return '!';
+
+"=="        return "==";
+"!="        return "!=";
+"&&"        return "&&";
+"||"        return "||";
 
 {INT} {
+      yylval.int_val = atoi(yytext);
 	    return tINTVAL;
 }
 
 {INT}"."{DIGIT}+	{
+      yylval.float_val = atof(yytext);
 			return tFLOATVAL;
 }
 
 [a-zA-Z_][a-zA-Z0-9_]* {
+      yylval.string_val = strdup(yytext);
 	    return tIDENTIFIER;
 }
 
-"//"[^\n]*"\n"	{
-	    return tCOMMENT;
-}
+"//"[^\n]*"\n"	/* comment */
 
 "\""({ALPHA}|{DIGIT}|{SPACE}|{SYMBOL}|{ESCAPE})*"\"" {
+      yylval.string_val = strdup(yytext);
       return tSTRINGVAL;
 }
 
