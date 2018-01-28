@@ -42,58 +42,140 @@ ESCAPE \\a|\\b|\\f|\\n|\\r|\\t|\\v|\\\"|\\\\
 [\r\n]+
 {SPACE}      /* ignore white space*/
 
-var          return tVAR;
-while        return tWHILE;
-boolean      return tBOOLEAN;
-float        return tFLOAT;
-if           return tIF;
-else         return tELSE;
-TRUE         return tTRUE;
-FALSE        return tFALSE;
-int          return tINT;
-print        return tPRINT;
-string       return tSTRING;
-read         return tREAD;
+var         {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tVAR;
+            }
+while       {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tWHILE;
+            }
+boolean     {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tBOOLEAN;
+            }
+float       {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tFLOAT;
+            }
+if          {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tIF;
+            }
+else        {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tELSE;
+            }
+TRUE        {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tTRUE;
+            }
+FALSE       {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tFALSE;
+            }
+int         {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tINT;
+            }
+print       {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tPRINT;
+            }
+string      {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tSTRING;
+            }
+read        {
+                if (mode == tokens) printf( "Reserved word: %s\n", yytext );
+                return tREAD;
+            }
 
 
-"+"         return '+';
-"-"         return '-';
-"*"         return '*';
-"/"         return '/';
-"("         return '(';
-")"         return ')';
-":"         return ':';
-";"         return ';';
-"="         return '=';
-"!"         return '!';
+"+"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '+';
+            }
+"-"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '-';
+            }
+"*"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '*';
+            }
+"/"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '/';
+            }
+"("         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '(';
+            }
+")"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return ')';
+            }
+":"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return ':';
+            }
+";"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return ';';
+            }
+"="         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '=';
+            }
+"!"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '!';
+            }
 
-"=="        return "==";
-"!="        return "!=";
-"&&"        return "&&";
-"||"        return "||";
+"=="        {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return "==";
+            }
+"!="        {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return "!=";
+            }
+"&&"        {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return "&&";
+            }
+"||"        {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return "||";
+            }
 
-{INT} {
-      yylval.int_val = atoi(yytext);
-	    return tINTVAL;
-}
+{INT}       {
+	            if (mode == tokens) printf ("Integer constant: %s\n", yytext);
+                yylval.int_val = atoi(yytext);
+	            return tINTVAL;
+            }
 
 {INT}"."{DIGIT}+	{
-      yylval.float_val = atof(yytext);
-			return tFLOATVAL;
-}
+                if (mode == tokens) printf ("Float constant: %s\n", yytext);
+                yylval.float_val = atof(yytext);
+			    return tFLOATVAL;
+            }
 
 [a-zA-Z_][a-zA-Z0-9_]* {
-      yylval.string_val = strdup(yytext);
-	    return tIDENTIFIER;
-}
+                if (mode == tokens) printf ("Identifier: %s\n", yytext);
+                yylval.string_val = strdup(yytext);
+	            return tIDENTIFIER;
+            }
 
 "//"[^\n]*"\n"	/* comment */
 
 "\""({ALPHA}|{DIGIT}|{SPACE}|{SYMBOL}|{ESCAPE})*"\"" {
-      yylval.string_val = strdup(yytext);
-      return tSTRINGVAL;
-}
+                if (mode == tokens) printf("String: %s\n", yytext);
+                yylval.string_val = strdup(yytext);
+                return tSTRINGVAL;
+            }
 
 
-. 	    { fprintf (stderr, "Error: (line %d) unexpected character '%s'\n", yylineno, yytext); exit(1); }
+. 	         { fprintf (stderr, "Error: (line %d) unexpected character '%s'\n", yylineno, yytext); exit(1); }
 %%
