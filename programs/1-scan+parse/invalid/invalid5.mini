@@ -1,0 +1,4 @@
+// parsing error: missing semicolon
+while (!x == a){
+    read a
+}

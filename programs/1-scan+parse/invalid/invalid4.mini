@@ -1,0 +1,8 @@
+// parsing error: one more else
+if (a==b){
+    read a;
+}else {
+    read b;
+}else {
+    print a;
+}

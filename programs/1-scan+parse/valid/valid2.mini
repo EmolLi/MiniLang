@@ -1,0 +1,20 @@
+var a:float = 1.0;
+if (a){
+    a = -a;
+} else{
+    a = a + 3;
+}
+
+if (b) {
+    if (a){
+        if(c) {
+            print a;
+            read b;
+        }
+        print b;
+    } else {
+
+    }
+} else{
+    print a + b;
+}

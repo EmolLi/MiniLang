@@ -1,0 +1,2 @@
+// scanning error: invalid float
+int a:float = 001.2;

@@ -1,3 +1,12 @@
-// This is a comment
 var a:float = 1.0;
+var b:string = 1.0; // this is syntactically correct
+
 read a;
+print a;
+
+while (a == b && (a || b && (b))){
+    read a;
+    if (a != b){
+        print b;
+    }
+}

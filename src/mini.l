@@ -116,6 +116,14 @@ read        {
                 if (mode == tokens) printf( "%s\n", yytext);
                 return ')';
             }
+"{"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '{';
+            }
+"}"         {
+                if (mode == tokens) printf( "%s\n", yytext);
+                return '}';
+            }
 ":"         {
                 if (mode == tokens) printf( "%s\n", yytext);
                 return ':';
@@ -135,19 +143,19 @@ read        {
 
 "=="        {
                 if (mode == tokens) printf( "%s\n", yytext);
-                return "==";
+                return tEQUAL;
             }
 "!="        {
                 if (mode == tokens) printf( "%s\n", yytext);
-                return "!=";
+                return tNOTEQUAL;
             }
 "&&"        {
                 if (mode == tokens) printf( "%s\n", yytext);
-                return "&&";
+                return tAND;
             }
 "||"        {
                 if (mode == tokens) printf( "%s\n", yytext);
-                return "||";
+                return tOR;
             }
 
 {INT}       {

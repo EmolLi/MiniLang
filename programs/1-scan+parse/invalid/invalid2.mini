@@ -1,0 +1,2 @@
+// scanning error: invalid string (\c not allowed)
+var b:string = "fsafsfsffscc\a\v\c";

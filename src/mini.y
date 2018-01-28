@@ -30,7 +30,11 @@ int yylex();
 void yyerror(const char *s) {
 	if (mode == parse){
 		fprintf(stderr, "Error: (line %d) %s\n", yylineno, s);
+		fprintf("%s\n", yytext);
 		exit(1);
+	}
+	else{
+		/* while(yylex()){} */
 	}
 }
 %}
