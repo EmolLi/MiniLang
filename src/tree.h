@@ -24,5 +24,4 @@ struct Node {
 Node *makeNode_identifier(char *id);
 Node *makeNode_intLiteral(int intLiteral);
 Node *makeNode_binary(NodeKind op, Node *lhs, Node *rhs);
-
 #endif /* !TREE_H */
