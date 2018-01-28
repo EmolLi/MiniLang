@@ -18,7 +18,8 @@ DIGIT [0-9]
 INT 0|([1-9]{DIGIT}*)
 SPACE [ \t]+
 ALPHA [a-zA-Z]
-SYMBOL "~"|"@"|"#"|"%"|"^"|"&"|"*"|"-"|"+"|"/"|"`"|"<"|">"|"="|"_"|"|"|"'"|"."|","|";"|":"|"!"|"?"|"{"|"}"|"["|"]"|"("|")"
+SYMBOL [^\\"]
+/* "*/
 ESCAPE \\a|\\b|\\f|\\n|\\r|\\t|\\v|\\\"|\\\\
 
 /* Scanner options, line number generation */
@@ -178,7 +179,7 @@ read        {
 
 "//"[^\n]*"\n"	/* comment */
 
-"\""({ALPHA}|{DIGIT}|{SPACE}|{SYMBOL}|{ESCAPE})*"\"" {
+"\""({SPACE}|{SYMBOL}|{ESCAPE})*"\"" {
                 if (mode == tokens) printf("String: %s\n", yytext);
                 yylval.string_val = strdup(yytext);
                 return tSTRINGVAL;

@@ -34,7 +34,7 @@ void yyerror(const char *s) {
 		exit(1);
 	}
 	else{
-		/* while(yylex()){} */
+		while(yylex()){}
 	}
 }
 %}

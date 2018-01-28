@@ -1,2 +1,2 @@
-// scanning error: invalid float
+// parsing error: invalid float (this will be handled by parser)
 int a:float = 001.2;
