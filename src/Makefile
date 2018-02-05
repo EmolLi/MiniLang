@@ -5,7 +5,7 @@ CFLAGS = -Wall
 all: parser.tab.o lex.yy.o main.o tree.h tree.o
 	$(CC) lex.yy.o parser.tab.o tree.o main.o -o mini -lfl
 
-scan: mini.l
+scan: mini.l tree.h tree.o
 	make lex.yy.c; $(CC) lex.yy.c -o mini -lfl
 
 parser.tab.c parser.tab.h: mini.y
@@ -15,6 +15,6 @@ lex.yy.c: mini.l parser.tab.h
 	flex mini.l
 
 debug: mini.y
-	 bison --verbose mini.y
+	 rm mini.output; bison --verbose mini.y
 clean:
-	rm parser.tab.* lex.yy.*; rm *.o mini
+	rm parser.tab.* lex.yy.*; rm *.o mini mini.tab.*

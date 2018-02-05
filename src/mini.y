@@ -96,12 +96,14 @@ void yyerror(const char *s) {
  * denote left-associative and right-associative respectively.
  */
 
-%token tEQUAL "=="
-%token tNOTEQUAL "!="
-%token tAND	"&&"
-%token tOR "||"
+%left tEQUAL "=="
+%left tNOTEQUAL "!="
+%left tAND	"&&"
+%left tOR "||"
 %left '+' '-'
 %left '*' '/'
+%left UMINUS
+%left NEG
 
 %type <node> program
 %type <node> declarations
@@ -161,23 +163,23 @@ else_statement: /* empty */	{}
 	| tELSE '{' statements '}'	{$$ = newNode();}
 	;
 
-expression:	tINTVAL	{$$ = newNode();}
+expression:	expression "==" expression	{$$ = newNode();}
+	| expression "!=" expression	{$$ = newNode();}
+	| expression "&&" expression	{$$ = newNode();}
+	| expression "||" expression	{$$ = newNode();}
+	| expression '+' expression	{$$ = newNode();}
+	| expression '-' expression	{$$ = newNode();}
+	| expression '*' expression	{$$ = newNode();}
+	| expression '/' expression	{$$ = newNode();}
+	| '-' expression	%prec UMINUS	{$$ = newNode();}
+	| '!' expression	%prec NEG {$$ = newNode();}
+	| '(' expression ')'	{$$ = newNode();}
+	| tINTVAL	{$$ = newNode();}
 	| tFLOATVAL		{$$ = newNode();}
 	| tSTRINGVAL	{$$ = newNode();}
 	| tIDENTIFIER	{$$ = newNode();}
 	| tTRUE			{$$ = newNode();}
 	| tFALSE		{$$ = newNode();}
-	| expression '*' expression	{$$ = newNode();}
-	| expression '/' expression	{$$ = newNode();}
-	| expression '+' expression	{$$ = newNode();}
-	| expression '-' expression	{$$ = newNode();}
-	| expression "==" expression	{$$ = newNode();}
-	| expression "!=" expression	{$$ = newNode();}
-	| expression "&&" expression	{$$ = newNode();}
-	| expression "||" expression	{$$ = newNode();}
-	| '-' expression	{$$ = newNode();}
-	| '!' expression	{$$ = newNode();}
-	| '(' expression ')'	{$$ = newNode();}
 	;
 
 %%
