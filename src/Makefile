@@ -2,8 +2,8 @@ CC = gcc
 
 CFLAGS = -Wall
 
-all: parser.tab.o lex.yy.o main.o
-	$(CC) lex.yy.o parser.tab.o main.o -o mini -lfl
+all: parser.tab.o lex.yy.o main.o tree.h tree.o
+	$(CC) lex.yy.o parser.tab.o tree.o main.o -o mini -lfl
 
 scan: mini.l
 	make lex.yy.c; $(CC) lex.yy.c -o mini -lfl
@@ -14,6 +14,7 @@ parser.tab.c parser.tab.h: mini.y
 lex.yy.c: mini.l parser.tab.h
 	flex mini.l
 
-
+debug: mini.y
+	 bison --verbose mini.y
 clean:
 	rm parser.tab.* lex.yy.*; rm *.o mini

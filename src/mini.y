@@ -30,7 +30,7 @@ int yylex();
 void yyerror(const char *s) {
 	if (mode == parse){
 		fprintf(stderr, "Error: (line %d) %s\n", yylineno, s);
-		fprintf("%s\n", yytext);
+		fprintf(stderr,  "%s\n", yytext);
 		exit(1);
 	}
 	else{
@@ -126,56 +126,58 @@ void yyerror(const char *s) {
  */
 %%
 
-program: declarations statements
+program: declarations statements	{$$ = newNode();}
 	;
 
 /* A variable declaration consists of the keyword var, an identifier, the variable type, and an initial
 value (may be compound, by compound it means valid expression). The identifier and type are separated by a colon, and the declaration
 ends with a semicolon. */
-declarations:	/* empty */
-	| declarations declaration
+declarations: /* empty */	{}
+	| declarations declaration	{$$ = newNode();}
 	;
 
-declaration: tVAR tIDENTIFIER ':' var_type '='	expression	';'	/* always use left recursion for Bison*/
+declaration: tVAR tIDENTIFIER ':' var_type '='	expression	';'		{$$ = newDeclaration();}	/* always use left recursion for Bison*/
 	;
 
-var_type:	tINT
-	| tBOOLEAN
-	| tFLOAT
-	| tSTRING
+var_type:	tINT	{$$ = newIntType();}
+	| tBOOLEAN		{$$ = newBoolType();}
+	| tFLOAT		{$$ = newFloatType();}
+	| tSTRING		{$$ = newStringType();}
 	;
 
 
-statements: /* empty */
-	| statements statement
+statements: /* empty */	{}
+	| statements statement	{$$ = newNode();}
 	;
 
-statement:	tREAD tIDENTIFIER ';'
-	| tPRINT expression ';'
-	| tIDENTIFIER '=' expression ';'
-	| tIF expression '{' statements '}' else_statement
-	| tWHILE expression '{' statements '}'
+statement:	tREAD tIDENTIFIER ';'	{$$ = newNode();}
+	| tPRINT expression ';'			{$$ = newNode();}
+	| tIDENTIFIER '=' expression ';'{$$ = newNode();}
+	| tIF expression '{' statements '}' else_statement	{$$ = newNode();}
+	| tWHILE expression '{' statements '}'	{$$ = newNode();}
 	;
 
-else_statement: /* empty */
-	| tELSE '{' statements '}'
+else_statement: /* empty */	{}
+	| tELSE '{' statements '}'	{$$ = newNode();}
 	;
 
-expression:	tINTVAL
-	| tFLOATVAL
-	| tSTRINGVAL
-	| tIDENTIFIER
-	| '-' expression
-	| '!' expression
-	| expression '*' expression
-	| expression '/' expression
-	| expression '+' expression
-	| expression '-' expression
-	| expression "==" expression
-	| expression "!=" expression
-	| expression "&&" expression
-	| expression "||" expression
-	| '(' expression ')'
+expression:	tINTVAL	{$$ = newNode();}
+	| tFLOATVAL		{$$ = newNode();}
+	| tSTRINGVAL	{$$ = newNode();}
+	| tIDENTIFIER	{$$ = newNode();}
+	| tTRUE			{$$ = newNode();}
+	| tFALSE		{$$ = newNode();}
+	| expression '*' expression	{$$ = newNode();}
+	| expression '/' expression	{$$ = newNode();}
+	| expression '+' expression	{$$ = newNode();}
+	| expression '-' expression	{$$ = newNode();}
+	| expression "==" expression	{$$ = newNode();}
+	| expression "!=" expression	{$$ = newNode();}
+	| expression "&&" expression	{$$ = newNode();}
+	| expression "||" expression	{$$ = newNode();}
+	| '-' expression	{$$ = newNode();}
+	| '!' expression	{$$ = newNode();}
+	| '(' expression ')'	{$$ = newNode();}
 	;
 
 %%
