@@ -128,7 +128,7 @@ void yyerror(const char *s) {
  */
 %%
 
-program: declarations statements	{$$ = newNode();}
+program: declarations statements	{root = $1;}
 	;
 
 /* A variable declaration consists of the keyword var, an identifier, the variable type, and an initial
@@ -163,10 +163,10 @@ else_statement: /* empty */	{}
 	| tELSE '{' statements '}'	{$$ = newNode();}
 	;
 
-expression:	expression "==" expression	{$$ = newNode();}
-	| expression "!=" expression	{$$ = newNode();}
-	| expression "&&" expression	{$$ = newNode();}
-	| expression "||" expression	{$$ = newNode();}
+expression: expression tEQUAL expression	{$$ = newNode();}
+	| expression tNOTEQUAL expression	{$$ = newNode();}
+	| expression tAND expression	{$$ = newNode();}
+	| expression tOR expression	{$$ = newNode();}
 	| expression '+' expression	{$$ = newNode();}
 	| expression '-' expression	{$$ = newNode();}
 	| expression '*' expression	{$$ = newNode();}
