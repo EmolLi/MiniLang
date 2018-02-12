@@ -138,7 +138,7 @@ declarations: /* empty */	{$$ = NULL;}
 	| declarations declaration	{$$ = newDeclarations($1, $2, @2.first_line);}
 	;
 
-declaration: tVAR tIDENTIFIER ':' var_type '='	expression	';'		{$$ = newDeclaration($2, $3, $5, @1.first_line);}	/* always use left recursion for Bison*/
+declaration: tVAR tIDENTIFIER ':' var_type '='	expression	';'		{$$ = newDeclaration(expressionIdentifier($2,  @2.first_line), $4, $6, @1.first_line);}	/* always use left recursion for Bison*/
 	;
 
 var_type:	tINT	{$$ = newType(k_NodeKindTypeInt, @1.first_line);}
@@ -152,14 +152,14 @@ statements: /* empty */	{$$ = NULL;}
 	| statements statement	{$$ = newStatements($1, $2, @2.first_line);}
 	;
 
-statement:	tREAD tIDENTIFIER ';'	{$$ = newStatementRead($2, @1.first_line);}
+statement:	tREAD tIDENTIFIER ';'	{$$ = newStatementRead(expressionIdentifier($2,  @2.first_line), @1.first_line);}
 	| tPRINT expression ';'			{$$ = newStatementPrint($2, @1.first_line);}
-	| tIDENTIFIER '=' expression ';'{$$ = newStatementAssign($1, $3, @1.first_line);}
+	| tIDENTIFIER '=' expression ';'{$$ = newStatementAssign(expressionIdentifier($1,  @1.first_line), $3, @1.first_line);}
 	| tIF expression '{' statements '}' else_statement	{$$ = newStatementIf($2, $4, $6, @1.first_line);}
 	| tWHILE expression '{' statements '}'	{$$ = newStatementWhile($2, $4, @1.first_line);}
 	;
 
-else_statement: /* empty */	{$$ = NULL}
+else_statement: /* empty */	{$$ = NULL;}
 	| tELSE '{' statements '}'	{$$ = newStatementElse($3, @1.first_line);}
 	;
 

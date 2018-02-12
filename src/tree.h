@@ -1,6 +1,7 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include <stdbool.h>
 typedef enum {
 	k_NodeKindExpIdentifier,
 	k_NodeKindExpIntLiteral,
@@ -47,7 +48,7 @@ struct Node {
 		struct { Node *lhs; Node *rhs; } binary;
 		struct { Node *declarations; Node *declaration;} declarations;
 		struct { Node *ident; Node *varType; Node *exp;} declaration;
-		struct { Node *statements; Node *statment;} statements;
+		struct { Node *statements; Node *statement;} statements;
 		struct { Node *ident; Node *exp;} assignStatement;
 		struct { Node *exp; Node *statements; Node *elseStatement;} ifStatement;
 		struct { Node *exp; Node *statements;} whileStatement;

@@ -4,6 +4,7 @@
 #include "comm.h"
 
 void yyparse();
+Node* root;
 enum modes mode;
 int main(int argc, char **argv)
 {

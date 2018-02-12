@@ -101,8 +101,7 @@ read        {
                 if (mode == tokens) printf( "%s\n", yytext);
                 return '-';
             }
-"*"      literal2.min
-   {
+"*"         {
                 if (mode == tokens) printf( "%s\n", yytext);
                 return '*';
             }
