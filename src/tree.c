@@ -22,38 +22,38 @@ Node* newDeclarations(Node* declarations, Node* declaration, int lineno){
 }
 
 
-Node* newDeclaration(){
+Node* newDeclaration(Node* ident, Node* varType, Node* exp, int lineno){
     Node *n = newNode();
     n->kind = k_NodeKindDeclaration;
 	return n;
 }
 
 
-Node* newStatements(){
+Node* newStatements(Node* statements, Node* statment, int lineno){
 
 }
 
-Node *newStatementRead(){
+Node *newStatementRead(Node* ident, int lineno){
 
 }
 
-Node *newStatementPrint(){
+Node *newStatementPrint(Node* exp, int lineno){
 
 }
 
-Node *newStatementAssign(){
+Node *newStatementAssign(Node* ident, Node* exp, int lineno){
 
 }
 
-Node *newStatementIf(){
+Node *newStatementIf(Node* exp, Node* statements, Node* elseStatements, int lineno){
 
 }
 
-Node *newStatementElse(){
+Node *newStatementElse(Node* statements, int lineno){
 
 }
 
-Node *newStatementWhile(){
+Node *newStatementWhile(Node* exp, Node* statements, int lineno){
 
 }
 

@@ -5,6 +5,8 @@ typedef enum {
 	k_NodeKindExpIdentifier,
 	k_NodeKindExpIntLiteral,
 	k_NodeKindExpFloatLiteral,
+	k_NodeKindExpStringLiteral,
+	k_NodeKindExpBoolLiteral,
 	k_NodeKindExpAddition,
 	k_NodeKindExpSubtraction,
 	k_NodeKindExpMultiplication,
@@ -13,6 +15,8 @@ typedef enum {
 	k_NodeKindExpNotEqual,
 	k_NodeKindExpAnd,
 	k_NodeKindExpOr,
+	k_NodeKindExpUMinus,
+	k_NodeKindExpNeg,
 	k_NodeKindTypeInt,
 	k_NodeKindTypeBool,
 	k_NodeKindTypeFloat,
@@ -34,44 +38,36 @@ struct Node {
 	NodeKind kind;
 	union {
 		char *identifier;
+		char* stringLiteral;
 		int intLiteral;
+		float floatLiteral;
+		bool boolLiteral;
 		struct { Node *lhs; Node *rhs; } binary;
+		struct { Node *node; } unary;
 	} val;
 };
 
 
 
-Node *expressionIdentifier(char *id);
-Node *makeNode_intLiteral(int intLiteral);
-Node *makeNode_binary(NodeKind op, Node *lhs, Node *rhs);
 
+Node *newType(NodeKind type, int lineno);
 
-Node *newIntType();
-Node *newBoolType();
-Node *newFloatType();
-Node *newStringType();
+Node *newDeclarations(Node* declarations, Node* declaration, int lineno);
+Node *newDeclaration(Node* ident, Node* varType, Node* exp, int lineno);
+Node *newStatements(Node* statements, Node* statment, int lineno);
+Node *newStatementRead(Node* ident, int lineno);
+Node *newStatementPrint(Node* exp, int lineno);
+Node *newStatementAssign(Node* ident, Node* exp, int lineno);
+Node *newStatementIf(Node* exp, Node* statements, Node* elseStatements, int lineno);
+Node *newStatementElse(Node* statements, int lineno);
+Node *newStatementWhile(Node* exp, Node* statements, int lineno);
 
-Node *newDeclaration();
-Node *newDeclarations();
-
-Node *newStatements();
-Node *newStatementRead();
-Node *newStatementPrint();
-Node *newStatementAssign();
-Node *newStatementIf();
-Node *newStatementElse();
-Node *newStatementWhile();
-
-Node *expressionIdentifier();
-Node *expressionIntLiteral();
-Node *expressionFloatLiteral();
-Node *expressionAddition();
-Node *expressionSubtraction();
-Node *expressionMultiplication();
-Node *expressionDivision();
-Node *expressionEqual();
-Node *expressionNotEqual();
-Node *expressionAnd();
-Node *expressionOr();
+Node *expressionIdentifier(char* val, int lineno);
+Node *expressionIntLiteral(int val, int lineno);
+Node *expressionFloatLiteral(float val, int lineno);
+Node *expressionStringLiteral(char* val, int lineno);
+Node *expressionBoolLiteral(bool val, int lineno);
+Node *expressionBinary(NodeKind op, Node *lhs, Node *rhs, int lineno);
+Node *expressionUnary(NodeKind op, Node *node, int lineno);
 
 #endif /* !TREE_H */
