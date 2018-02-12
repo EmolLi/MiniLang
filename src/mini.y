@@ -134,52 +134,52 @@ program: declarations statements	{root = $1;}
 /* A variable declaration consists of the keyword var, an identifier, the variable type, and an initial
 value (may be compound, by compound it means valid expression). The identifier and type are separated by a colon, and the declaration
 ends with a semicolon. */
-declarations: /* empty */	{}
-	| declarations declaration	{$$ = newNode();}
+declarations: /* empty */	{$$ = NULL;}
+	| declarations declaration	{$$ = newDeclarations($1, $2, @2.first_line);}
 	;
 
-declaration: tVAR tIDENTIFIER ':' var_type '='	expression	';'		{$$ = newDeclaration();}	/* always use left recursion for Bison*/
+declaration: tVAR tIDENTIFIER ':' var_type '='	expression	';'		{$$ = newDeclaration($2, $3, $5, @1.first_line);}	/* always use left recursion for Bison*/
 	;
 
-var_type:	tINT	{$$ = newIntType();}
-	| tBOOLEAN		{$$ = newBoolType();}
-	| tFLOAT		{$$ = newFloatType();}
-	| tSTRING		{$$ = newStringType();}
+var_type:	tINT	{$$ = newType(k_NodeKindTypeInt, @1.first_line);}
+	| tBOOLEAN		{$$ = newType(k_NodeKindTypeBool, @1.first_line);}
+	| tFLOAT		{$$ = newType(k_NodeKindTypeFloat, @1.first_line);}
+	| tSTRING		{$$ = newType(k_NodeKindTypeString, @1.first_line);}
 	;
 
 
-statements: /* empty */	{}
-	| statements statement	{$$ = newNode();}
+statements: /* empty */	{$$ = NULL;}
+	| statements statement	{$$ = newStatements($1, $2, @2.first_line);}
 	;
 
-statement:	tREAD tIDENTIFIER ';'	{$$ = newNode();}
-	| tPRINT expression ';'			{$$ = newNode();}
-	| tIDENTIFIER '=' expression ';'{$$ = newNode();}
-	| tIF expression '{' statements '}' else_statement	{$$ = newNode();}
-	| tWHILE expression '{' statements '}'	{$$ = newNode();}
+statement:	tREAD tIDENTIFIER ';'	{$$ = newStatementRead($2, @1.first_line);}
+	| tPRINT expression ';'			{$$ = newStatementPrint($2, @1.first_line);}
+	| tIDENTIFIER '=' expression ';'{$$ = newStatementAssign($1, $3, @1.first_line);}
+	| tIF expression '{' statements '}' else_statement	{$$ = newStatementIf($2, $4, $6, @1.first_line);}
+	| tWHILE expression '{' statements '}'	{$$ = newStatementWhile($2, $4, @1.first_line);}
 	;
 
-else_statement: /* empty */	{}
-	| tELSE '{' statements '}'	{$$ = newNode();}
+else_statement: /* empty */	{$$ = NULL}
+	| tELSE '{' statements '}'	{$$ = newStatementElse($3, @1.first_line);}
 	;
 
-expression: expression tEQUAL expression	{$$ = newNode();}
-	| expression tNOTEQUAL expression	{$$ = newNode();}
-	| expression tAND expression	{$$ = newNode();}
-	| expression tOR expression	{$$ = newNode();}
-	| expression '+' expression	{$$ = newNode();}
-	| expression '-' expression	{$$ = newNode();}
-	| expression '*' expression	{$$ = newNode();}
-	| expression '/' expression	{$$ = newNode();}
-	| '-' expression	%prec UMINUS	{$$ = newNode();}
-	| '!' expression	%prec NEG {$$ = newNode();}
-	| '(' expression ')'	{$$ = newNode();}
-	| tINTVAL	{$$ = newNode();}
-	| tFLOATVAL		{$$ = newNode();}
-	| tSTRINGVAL	{$$ = newNode();}
-	| tIDENTIFIER	{$$ = newNode();}
-	| tTRUE			{$$ = newNode();}
-	| tFALSE		{$$ = newNode();}
+expression: expression tEQUAL expression	{$$ = expressionBinary(k_NodeKindExpEqual, $1, $3, @2.first_line);}
+	| expression tNOTEQUAL expression	{$$ = expressionBinary(k_NodeKindExpNotEqual, $1, $3, @2.first_line);}
+	| expression tAND expression	{$$ = expressionBinary(k_NodeKindExpAnd, $1, $3, @2.first_line);}
+	| expression tOR expression	{$$ = expressionBinary(k_NodeKindExpOr, $1, $3, @2.first_line);}
+	| expression '+' expression	{$$ = expressionBinary(k_NodeKindExpAddition, $1, $3, @2.first_line);}
+	| expression '-' expression	{$$ = expressionBinary(k_NodeKindExpDivision, $1, $3, @2.first_line);}
+	| expression '*' expression	{$$ = expressionBinary(k_NodeKindExpMultiplication, $1, $3, @2.first_line);}
+	| expression '/' expression	{$$ = expressionBinary(k_NodeKindExpDivision, $1, $3, @2.first_line);}
+	| '-' expression	%prec UMINUS	{$$ = expressionUnary(k_NodeKindExpUMinus, $2, @1.first_line);}
+	| '!' expression	%prec NEG {$$ = expressionUnary(k_NodeKindExpNeg, $2, @1.first_line);}
+	| '(' expression ')'	{$$ = $2;}
+	| tINTVAL	{$$ = expressionIntLiteral($1, @1.first_line);}
+	| tFLOATVAL		{$$ = expressionFloatLiteral($1, @1.first_line);}
+	| tSTRINGVAL	{$$ = expressionStringLiteral($1, @1.first_line);}
+	| tIDENTIFIER	{$$ = expressionIdentifier($1, @1.first_line);}
+	| tTRUE			{$$ = expressionBoolLiteral(true, @1.first_line);}
+	| tFALSE		{$$ = expressionBoolLiteral(false, @1.first_line);}
 	;
 
 %%

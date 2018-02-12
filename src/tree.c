@@ -3,38 +3,68 @@
 
 extern int yylineno;
 
-Node *newNode(){
+Node *newNode(NodeKind k, int lineno){
     Node *n = malloc(sizeof(Node));
-    n->lineno = yylineno;
+    n->lineno = lineno;
+    n->kind = k;
     return n;
 }
 
-Node *newIntType(){
-    Node *n = newNode();
-    n->kind = k_NodeKindTypeInt;
-    return n;
+Node *newType(NodeKind type, int lineno){
+
 }
 
-Node *newBoolType(){
+
+Node* newDeclarations(Node* declarations, Node* declaration, int lineno){
     Node *n = newNode();
-    n->kind = k_NodeKindTypeBool;
-    return n;
+    n->kind = k_NodeKindDeclarations;
+	return n;
 }
 
-Node *newFloatType(){
-    Node *n = newNode();
-    n->kind = k_NodeKindTypeFloat;
-    return n;
-}
-
-Node *newStringType(){
-    Node *n = newNode();
-    n->kind = k_NodeKindTypeString;
-    return n;
-}
 
 Node* newDeclaration(){
     Node *n = newNode();
     n->kind = k_NodeKindDeclaration;
 	return n;
 }
+
+
+Node* newStatements(){
+
+}
+
+Node *newStatementRead(){
+
+}
+
+Node *newStatementPrint(){
+
+}
+
+Node *newStatementAssign(){
+
+}
+
+Node *newStatementIf(){
+
+}
+
+Node *newStatementElse(){
+
+}
+
+Node *newStatementWhile(){
+
+}
+
+
+// expression
+Node *expressionIdentifier(char* val, int lineno){}
+
+Node *expressionIntLiteral(int val, int lineno){}
+Node *expressionFloatLiteral(float val, int lineno){}
+Node *expressionStringLiteral(char* val, int lineno){}
+Node *expressionBoolLiteral(bool val, int lineno){}
+Node *expressionLiteral(NodeKind type, int lineno){}
+Node *expressionBinary(NodeKind op, Node *lhs, Node *rhs, int lineno){}
+Node *expressionUnary(NodeKind op, Node *node, int lineno){}
