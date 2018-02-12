@@ -11,6 +11,13 @@ Node *newNode(NodeKind k, int lineno){
     return n;
 }
 
+Node *newProg(Node* declarations, Node* statements, int lineno){
+    Node *n = newNode(k_NodeKindProg, lineno);
+    n->val.prog.declarations = declarations;
+    n->val.prog.statements = statements;
+    return n;
+}
+
 Node *newType(NodeKind type, int lineno){
     Node *n = newNode(type, lineno);
     return n;

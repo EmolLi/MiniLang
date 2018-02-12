@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	if (strcmp(argv[1], "parse") == 0) mode = parse;
 
 	yyparse();
-	printf("OK\n");
+	// printf("OK\n");
 
 	prettyNode(root);
 	return 0;

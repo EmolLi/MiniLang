@@ -128,7 +128,7 @@ void yyerror(const char *s) {
  */
 %%
 
-program: declarations statements	{root = $1;}
+program: declarations statements	{root = newProg($1, $2, @1.first_line);}
 	;
 
 /* A variable declaration consists of the keyword var, an identifier, the variable type, and an initial

@@ -3,9 +3,14 @@
 
 void prettyNode(Node *e)
 {
-    if (e == null) return;
+    if (e == NULL) return;
 
 	switch (e->kind) {
+        case k_NodeKindProg:
+            prettyNode(e->val.prog.declarations);
+            prettyNode(e->val.prog.statements);
+            break;
+
         case k_NodeKindExpIdentifier:
 			printf("%s", e->val.identifier);
 			break;
@@ -24,6 +29,7 @@ void prettyNode(Node *e)
 
         case k_NodeKindExpBoolLiteral:
             printf(e->val.boolLiteral ? "TRUE" : "FALSE");
+            break;
 
 		case k_NodeKindExpAddition:
 			printf("(");
@@ -118,7 +124,9 @@ void prettyNode(Node *e)
             break;
 
         case k_NodeKindDeclaration:
-            printf("var %s : ", e->val.declaration.ident);
+            printf("var ");
+            prettyNode(e->val.declaration.ident);
+            printf(": ");
             prettyNode(e->val.declaration.varType);
             printf(" = ");
             prettyNode(e->val.declaration.exp);

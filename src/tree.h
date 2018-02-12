@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 typedef enum {
+	k_NodeKindProg,
 	k_NodeKindExpIdentifier,
 	k_NodeKindExpIntLiteral,
 	k_NodeKindExpFloatLiteral,
@@ -45,6 +46,7 @@ struct Node {
 		bool boolLiteral;
 
 		Node* node;
+		struct { Node *declarations; Node *statements; } prog;
 		struct { Node *lhs; Node *rhs; } binary;
 		struct { Node *declarations; Node *declaration;} declarations;
 		struct { Node *ident; Node *varType; Node *exp;} declaration;
@@ -56,7 +58,7 @@ struct Node {
 };
 
 
-
+Node *newProg(Node* declarations, Node* statements, int lineno);
 
 Node *newType(NodeKind type, int lineno);
 
