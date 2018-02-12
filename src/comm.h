@@ -1,1 +1,1 @@
-enum modes{scan, tokens, parse, pretty};
+enum modes{scan, tokens, parse, pretty, symbol};

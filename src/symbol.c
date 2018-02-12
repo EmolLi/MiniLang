@@ -64,20 +64,39 @@ bool symbolNotDefined(char* name){
     return getSymbol(name)==NULL;
 }
 
-void symProgram(Node *n){
+void symProgram(Node *n, bool printTable){
     t = initSymbolTable();
+    buildSymbolTable(n);
+    if (printTable){
+        printSymTable();
+    }
 }
 
 
 
-void symPROGRAM(PROGRAM *p)
-{ classlib = initSymbolTable();
-  symInterfacePROGRAM(p,classlib);
-  symInterfaceTypesPROGRAM(p,classlib);
-  symImplementationPROGRAM(p);
+void printSymTable(){
+    for (int i = 0; i < HashSize; i++) {
+        if (t->table[i] != NULL){
+            for (SYMBOL *s = t->table[i]; s; s = s->next) {
+                printf("%s: ", s->name);
+                switch (s->type) {
+                    case st_INT:
+                        printf("int\n");
+                        break;
+                    case st_FLOAT:
+                        printf("float\n");
+                        break;
+                    case st_STRING:
+                        printf("string\n");
+                        break;
+                    case st_BOOL:
+                        printf("bool\n");
+                        break;
+                }
+            }
+        }
+    }
 }
-
-
 void buildSymbolTable(Node *n){
     char* name;
     if (n != NULL){
@@ -111,69 +130,24 @@ void buildSymbolTable(Node *n){
                 }
                 break;
 
-            case k_NodeKindExpIntLiteral:
-                break;
-
-            case k_NodeKindExpFloatLiteral:
-                break;
-
-            case k_NodeKindExpStringLiteral:
-                break;
-
-            case k_NodeKindExpBoolLiteral:
-                break;
-
             case k_NodeKindExpAddition:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpSubtraction:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpMultiplication:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpDivision:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpEqual:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpNotEqual:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpAnd:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
-                break;
             case k_NodeKindExpOr:
                 buildSymbolTable(e->val.binary.lhs);
                 buildSymbolTable(e->val.binary.rhs);
                 break;
 
             case k_NodeKindExpUMinus:
-                buildSymbolTable(e->val.node);
-                break;
-
             case k_NodeKindExpNeg:
+            case k_NodeKindStatementRead:
+            case k_NodeKindStatementPrint:
+            case k_NodeKindStatementElse:
                 buildSymbolTable(e->val.node);
-                break;
-
-            case k_NodeKindTypeInt:
-                break;
-
-            case k_NodeKindTypeBool:
-                break;
-
-            case k_NodeKindTypeFloat:
-                break;
-
-            case k_NodeKindTypeString:
                 break;
 
 
@@ -182,13 +156,6 @@ void buildSymbolTable(Node *n){
                 buildSymbolTable(e->val.statements.statement);
                 break;
 
-            case k_NodeKindStatementRead:
-                buildSymbolTable(e->val.node);
-                break;
-
-            case k_NodeKindStatementPrint:
-                buildSymbolTable(e->val.node);
-                break;
 
             case k_NodeKindStatementAssign:
                 buildSymbolTable(e->val.assignStatement.ident);
@@ -202,14 +169,12 @@ void buildSymbolTable(Node *n){
                 break;
 
 
-            case k_NodeKindStatementElse:
-                buildSymbolTable(e->val.node);
-                break;
-
             case k_NodeKindStatementWhile:
                 buildSymbolTable(e->val.whileStatement.exp);
                 buildSymbolTable(e->val.whileStatement.statements);
                 break;
+
+            default: break;
         }
     }
 }

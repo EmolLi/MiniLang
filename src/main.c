@@ -3,6 +3,7 @@
 #include "tree.h"
 #include "comm.h"
 #include "pretty.h"
+#include "symbol.h"
 
 void yyparse();
 Node* root;
@@ -21,6 +22,6 @@ int main(int argc, char **argv)
 	if (mode == pretty) prettyNode(root);
 
 
-	if (mode == symbol) symProgram(root);
+	if (mode == symbol) symProgram(root, true);
 	return 0;
 }
