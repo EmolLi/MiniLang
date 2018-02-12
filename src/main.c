@@ -12,10 +12,15 @@ int main(int argc, char **argv)
 	if (strcmp(argv[1], "scan") == 0) mode = scan;
 	if (strcmp(argv[1], "tokens") == 0) mode = tokens;
 	if (strcmp(argv[1], "parse") == 0) mode = parse;
+	if (strcmp(argv[1], "pretty") == 0) mode = pretty;
+	if (strcmp(argv[1], "symbol") == 0) mode = symbol;
 
 	yyparse();
-	// printf("OK\n");
+	if (mode == parse) printf("OK\n");
 
-	prettyNode(root);
+	if (mode == pretty) prettyNode(root);
+
+
+	if (mode == symbol) symProgram(root);
 	return 0;
 }

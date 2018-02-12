@@ -2,6 +2,7 @@
 #define TREE_H
 
 #include <stdbool.h>
+
 typedef enum {
 	k_NodeKindProg,
 	k_NodeKindExpIdentifier,
