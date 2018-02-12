@@ -42,8 +42,15 @@ struct Node {
 		int intLiteral;
 		float floatLiteral;
 		bool boolLiteral;
+
+		Node* node;
 		struct { Node *lhs; Node *rhs; } binary;
-		struct { Node *node; } unary;
+		struct { Node *declarations; Node *declaration;} declarations;
+		struct { Node *ident; Node *varType; Node *exp;} declaration;
+		struct { Node *statements; Node *statment;} statements;
+		struct { Node *ident; Node *exp;} assignStatement;
+		struct { Node *exp; Node *statements; Node *elseStatement;} ifStatement;
+		struct { Node *exp; Node *statements;} whileStatement;
 	} val;
 };
 
@@ -58,7 +65,7 @@ Node *newStatements(Node* statements, Node* statment, int lineno);
 Node *newStatementRead(Node* ident, int lineno);
 Node *newStatementPrint(Node* exp, int lineno);
 Node *newStatementAssign(Node* ident, Node* exp, int lineno);
-Node *newStatementIf(Node* exp, Node* statements, Node* elseStatements, int lineno);
+Node *newStatementIf(Node* exp, Node* statements, Node* elseStatement, int lineno);
 Node *newStatementElse(Node* statements, int lineno);
 Node *newStatementWhile(Node* exp, Node* statements, int lineno);
 
