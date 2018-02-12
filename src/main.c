@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 	if (mode == pretty) prettyNode(root);
 
 
-	if (mode == symbol) symProgram(root, true);
+	symProgram(root, true);
+	// if (mode == symbol) symProgram(root, true);
 	return 0;
 }

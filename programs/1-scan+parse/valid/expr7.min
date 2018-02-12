@@ -1,4 +1,4 @@
 // valid string operations
-// var s : string = "";
+var s : string = "";
 s = "string" + "string";
 s = "string" * 3;

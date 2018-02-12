@@ -18,9 +18,10 @@ typedef struct SymbolTable {
 
 
 SymbolTable *initSymbolTable();
-
+void buildSymbolTable(Node *n);
+void printSymTable();
 SYMBOL *putSymbol(Node* declaration);
 
-SYMBOL *getSymbol(SymbolTable *t, char *name);
+SYMBOL *getSymbol(char *name);
 
 void symProgram(Node *n, bool printTable);

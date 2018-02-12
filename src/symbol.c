@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "symbol.h"
 SymbolTable *t;
@@ -23,12 +24,15 @@ SYMBOL *putSymbol(Node* declaration) {
     char* name = strdup((declaration->val.declaration.ident)->val.identifier);
     int i = Hash(name);
     for (SYMBOL *s = t->table[i]; s; s = s->next) {
-        if (strcmp(s->name, name) == 0) // throw an error
+        if (strcmp(s->name, name) == 0) {
+            fprintf(stderr, "Error: (line %d) Variable %s already defined.\n", declaration->lineno, name);
+            exit(1);
+        }
     }
     SYMBOL *s = malloc(sizeof(SYMBOL));
     s->name = name;
     s->val = declaration;   // defined point
-    switch ((declaration->val.declarations.varType)->kind) {
+    switch ((declaration->val.declaration.varType)->kind) {
         case k_NodeKindTypeInt:
             s->type = st_INT;
             break;
@@ -44,6 +48,10 @@ SYMBOL *putSymbol(Node* declaration) {
         case k_NodeKindTypeString:
             s->type = st_STRING;
             break;
+
+        default:
+            fprintf(stderr, "Error: (line %d) Putting symbol %s wrong type.\n", declaration->lineno, name);
+            exit(1);
     }
     // s->kind = kind;
     s->next = t->table[i];
@@ -108,13 +116,7 @@ void buildSymbolTable(Node *n){
 
             case k_NodeKindDeclaration:
                 name = (n->val.declaration.ident)->val.identifier;
-                if (symbolNotDefined(name)){
-                    putSymbol(n);
-                }
-                else {
-                    fprintf(stderr, "Error: (line %d) Variable %s already defined.\n", n->lineno, name);
-            		exit(1);
-                }
+                putSymbol(n);
                 break;
 
             case k_NodeKindDeclarations:
@@ -138,8 +140,8 @@ void buildSymbolTable(Node *n){
             case k_NodeKindExpNotEqual:
             case k_NodeKindExpAnd:
             case k_NodeKindExpOr:
-                buildSymbolTable(e->val.binary.lhs);
-                buildSymbolTable(e->val.binary.rhs);
+                buildSymbolTable(n->val.binary.lhs);
+                buildSymbolTable(n->val.binary.rhs);
                 break;
 
             case k_NodeKindExpUMinus:
@@ -147,31 +149,31 @@ void buildSymbolTable(Node *n){
             case k_NodeKindStatementRead:
             case k_NodeKindStatementPrint:
             case k_NodeKindStatementElse:
-                buildSymbolTable(e->val.node);
+                buildSymbolTable(n->val.node);
                 break;
 
 
             case k_NodeKindStatements:
-                buildSymbolTable(e->val.statements.statements);
-                buildSymbolTable(e->val.statements.statement);
+                buildSymbolTable(n->val.statements.statements);
+                buildSymbolTable(n->val.statements.statement);
                 break;
 
 
             case k_NodeKindStatementAssign:
-                buildSymbolTable(e->val.assignStatement.ident);
-                buildSymbolTable(e->val.assignStatement.exp);
+                buildSymbolTable(n->val.assignStatement.ident);
+                buildSymbolTable(n->val.assignStatement.exp);
                 break;
 
             case k_NodeKindStatementIf:
-                buildSymbolTable(e->val.ifStatement.exp);
-                buildSymbolTable(e->val.ifStatement.statements);
-                buildSymbolTable(e->val.ifStatement.elseStatement);
+                buildSymbolTable(n->val.ifStatement.exp);
+                buildSymbolTable(n->val.ifStatement.statements);
+                buildSymbolTable(n->val.ifStatement.elseStatement);
                 break;
 
 
             case k_NodeKindStatementWhile:
-                buildSymbolTable(e->val.whileStatement.exp);
-                buildSymbolTable(e->val.whileStatement.statements);
+                buildSymbolTable(n->val.whileStatement.exp);
+                buildSymbolTable(n->val.whileStatement.statements);
                 break;
 
             default: break;
