@@ -1,115 +1,119 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "symbol.h"
 #include "type.h"
 
+
 void typeProgram(Node *n){
-    if (n! = NULL){
-        case k_NodeKindProg:
+    if (n != NULL){
+        switch (n->kind) {
+
+            case k_NodeKindProg:
             typeProgram(n->val.prog.declarations);
             typeProgram(n->val.prog.statements);
             break;
 
-        case k_NodeKindExpIdentifier:
+            case k_NodeKindExpIdentifier:
             // definition and redefination already checked at symbol table phase
             break;
 
-        case k_NodeKindExpIntLiteral:
+            case k_NodeKindExpIntLiteral:
             n->type = st_INT;
             break;
 
-        case k_NodeKindExpFloatLiteral:
+            case k_NodeKindExpFloatLiteral:
             n->type = st_FLOAT;
             break;
 
-        case k_NodeKindExpStringLiteral:
+            case k_NodeKindExpStringLiteral:
             n->type = st_STRING;
             break;
 
-        case k_NodeKindExpBoolLiteral:
+            case k_NodeKindExpBoolLiteral:
             n->type = st_BOOL;
             break;
 
-        case k_NodeKindExpAddition:
+            case k_NodeKindExpAddition:
             typeProgram(n->val.binary.lhs);
             typeProgram(n->val.binary.rhs);
             n->type = typeBinaryASMD(n->val.binary.lhs, n->val.binary.rhs, k_NodeKindExpAddition);
             break;
 
-        case k_NodeKindExpSubtraction:
+            case k_NodeKindExpSubtraction:
             typeProgram(n->val.binary.lhs);
             typeProgram(n->val.binary.rhs);
             n->type = typeBinaryASMD(n->val.binary.lhs, n->val.binary.rhs, k_NodeKindExpSubtraction);
             break;
 
-        case k_NodeKindExpMultiplication:
+            case k_NodeKindExpMultiplication:
             typeProgram(n->val.binary.lhs);
             typeProgram(n->val.binary.rhs);
             n->type = typeBinaryASMD(n->val.binary.lhs, n->val.binary.rhs, k_NodeKindExpMultiplication);
             break;
 
-        case k_NodeKindExpDivision:
+            case k_NodeKindExpDivision:
             typeProgram(n->val.binary.lhs);
             typeProgram(n->val.binary.rhs);
             n->type = typeBinaryASMD(n->val.binary.lhs, n->val.binary.rhs, k_NodeKindExpDivision);
             break;
 
 
-        case k_NodeKindExpEqual:
-        case k_NodeKindExpNotEqual:
+            case k_NodeKindExpEqual:
+            case k_NodeKindExpNotEqual:
             typeProgram(n->val.binary.lhs);
             typeProgram(n->val.binary.rhs);
             n->type = typeBinaryEN(n->val.binary.lhs, n->val.binary.rhs);
             break;
 
 
-        case k_NodeKindExpAnd:
-        case k_NodeKindExpOr:
+            case k_NodeKindExpAnd:
+            case k_NodeKindExpOr:
             typeProgram(n->val.binary.lhs);
             typeProgram(n->val.binary.rhs);
             n->type = typeBinaryAO(n->val.binary.lhs, n->val.binary.rhs);
             break;
 
-        case k_NodeKindExpUMinus:
+            case k_NodeKindExpUMinus:
             typeProgram(n->val.node);
             n->type = typeUMinus(n->val.node);
             break;
 
-        case k_NodeKindExpNeg:
+            case k_NodeKindExpNeg:
             typeProgram(n->val.node);
             n->type = typeUNeg(n->val.node);
             break;
 
-        case k_NodeKindDeclaration:
+            case k_NodeKindDeclaration:
             typeProgram(n->val.declaration.exp);
             typeAssign(n->val.declaration.ident, n->val.declaration.exp);
             break;
 
-        case k_NodeKindDeclarations:
+            case k_NodeKindDeclarations:
             typeProgram(n->val.declarations.declarations);
             typeProgram(n->val.declarations.declaration);
             break;
 
-        case k_NodeKindStatements:
+            case k_NodeKindStatements:
             typeProgram(n->val.statements.statements);
             typeProgram(n->val.statements.statement);
             break;
 
-        case k_NodeKindStatementRead:
+            case k_NodeKindStatementRead:
             typeProgram(n->val.node);
             break;
 
-        case k_NodeKindStatementPrint:
+            case k_NodeKindStatementPrint:
             typeProgram(n->val.node);
             break;
 
-        case k_NodeKindStatementAssign:
+            case k_NodeKindStatementAssign:
             typeProgram(n->val.assignStatement.ident);
             typeProgram(n->val.assignStatement.exp);
-            typeAssign(n->val.assignStatement.ident, n->val.assignStatement.exp)
+            typeAssign(n->val.assignStatement.ident, n->val.assignStatement.exp);
             break;
 
-        case k_NodeKindStatementIf:
+            case k_NodeKindStatementIf:
             typeProgram(n->val.ifStatement.exp);
             typeBool(n->val.ifStatement.exp);
             typeProgram(n->val.ifStatement.statements);
@@ -117,15 +121,18 @@ void typeProgram(Node *n){
             break;
 
 
-        case k_NodeKindStatementElse:
+            case k_NodeKindStatementElse:
             typeProgram(n->val.node);
             break;
 
-        case k_NodeKindStatementWhile:
+            case k_NodeKindStatementWhile:
             typeProgram(n->val.whileStatement.exp);
             typeBool(n->val.whileStatement.exp);
             typeProgram(n->val.whileStatement.statements);
             break;
+
+            default: break;
+        }
     }
 }
 
@@ -161,13 +168,13 @@ SymbolType typeBinaryEN(Node* lhs, Node* rhs){
 
 SymbolType typeUMinus(Node* exp){
     if (exp->type == st_INT || exp->type == st_FLOAT) return exp->type;
-    fprintf(stderr, "Error: (line %d) unary minus operation type incorrect, expecting type float or int.\n", lhs->lineno);
+    fprintf(stderr, "Error: (line %d) unary minus operation type incorrect, expecting type float or int.\n", exp->lineno);
     exit(1);
 }
 
 SymbolType typeUNeg(Node* exp){
     if (exp->type == st_BOOL) return exp->type;
-    fprintf(stderr, "Error: (line %d) unary neg operation type incorrect, expecting type bool.\n", lhs->lineno);
+    fprintf(stderr, "Error: (line %d) unary neg operation type incorrect, expecting type bool.\n", exp->lineno);
     exit(1);
 }
 

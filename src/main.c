@@ -4,6 +4,7 @@
 #include "comm.h"
 #include "pretty.h"
 #include "symbol.h"
+#include "type.h"
 
 void yyparse();
 Node* root;
@@ -23,6 +24,7 @@ int main(int argc, char **argv)
 
 
 	symProgram(root, true);
+	typeProgram(root);
 	// if (mode == symbol) symProgram(root, true);
 	return 0;
 }
