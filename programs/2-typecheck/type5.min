@@ -1,0 +1,17 @@
+// Type error: assign boolean value to string
+var a:int = 1;
+var b:float = 1;
+var c:float = 2.9;
+var d:string = "werw";
+var f:boolean= TRUE;
+
+//a = 2.9;
+//a = FALSE;
+//b = "23";
+//b = FALSE;
+//d = 1;
+//d = 3.2;
+d = TRUE;
+//f = 1;
+//f = 1.2;
+//f = "sdf";

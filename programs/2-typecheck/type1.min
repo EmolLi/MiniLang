@@ -1,0 +1,15 @@
+// Error: while condition is of type float
+var a:int = 1;
+var b:int = 2;
+var c: float = 3.2;
+var d: string = "fsdf";
+var e: boolean = FALSE;
+
+while (1==a){}
+while(b==a){}
+while(c !=c){}
+while (1+b){}
+while (e && FALSE){}
+
+//while(d){}
+while(c+b){}    // error

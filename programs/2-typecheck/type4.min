@@ -1,0 +1,23 @@
+// Error: trying to minus a string from a string.
+var a:int = 1;
+var b:int = 2;
+var c: float = 3.2;
+var d: string = "fsdf";
+
+a = a + b;
+a = 1-2;
+a = 1*2/5;
+c = a + b + c;
+c= 2+b/2*0.5;
+c = a + b;
+d = d * a;
+d = a* d;
+d = 3*d;
+d = d*3;
+d = d+d;
+
+//d = d *c;
+//d= d + TRUE;
+//d = d* TRUE;
+//d= c*d;
+d = d-d;    // error

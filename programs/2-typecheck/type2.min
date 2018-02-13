@@ -1,0 +1,18 @@
+// Error: if condition is of type String
+var a:int = 1;
+var b:int = 2;
+var c: float = 3.2;
+var d: string = "fsdf";
+var e: boolean = FALSE;
+
+
+if (a + b){
+    if (e){
+        if (TRUE && e || FALSE){}
+    }
+}
+if (d == d){}
+
+//if (a +c){}
+//if (a *d){}
+if (d){}    // error, d is type string

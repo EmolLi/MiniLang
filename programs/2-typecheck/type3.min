@@ -1,0 +1,34 @@
+// Error: trying to do OR operation with string
+var a:int = 1;
+var b:int = 2;
+var c: float = 3.2;
+var d: string = "fsdf";
+var e: boolean = FALSE;
+
+e = a || b;
+e = TRUE && FALSE;
+e = e || e;
+
+// e = a && c;
+// e = d && TRUE;
+e = d || FALSE;     // error
+
+e = a == b;
+e = c != c;
+e = d == d;
+e = e!= e;
+
+
+//e = a !=c;
+//e = a == d;
+//e = a ==e;
+
+a = -a;
+a = -1;
+c = -1.2;
+c = -a;
+c = -c;
+
+// d = -d;
+// a = -c;
+// e = -e;
