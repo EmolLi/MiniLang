@@ -1,6 +1,5 @@
 var a:float = 1.0;
 var b:string = 1.0; // this is syntactically correct
-
 read a;
 print a;
 

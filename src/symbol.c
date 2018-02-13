@@ -107,6 +107,7 @@ void printSymTable(){
 }
 void buildSymbolTable(Node *n){
     char* name;
+    SYMBOL* s;
     if (n != NULL){
         switch (n->kind) {
             case k_NodeKindProg:
@@ -116,7 +117,8 @@ void buildSymbolTable(Node *n){
 
             case k_NodeKindDeclaration:
                 name = (n->val.declaration.ident)->val.identifier;
-                putSymbol(n);
+                s = putSymbol(n);
+                n->val.declaration.ident->type = s->type;
                 break;
 
             case k_NodeKindDeclarations:
@@ -126,10 +128,13 @@ void buildSymbolTable(Node *n){
 
             case k_NodeKindExpIdentifier:
                 name = n->val.identifier;
-                if (symbolNotDefined(name)){
+                s = getSymbol(name);
+                if (s == NULL){
                     fprintf(stderr, "Error: (line %d) Variable %s not defined.\n", n->lineno, name);
             		exit(1);
                 }
+                n->symbol = s;
+                n->type = s->type;
                 break;
 
             case k_NodeKindExpAddition:

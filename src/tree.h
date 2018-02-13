@@ -3,6 +3,16 @@
 
 #include <stdbool.h>
 
+typedef enum{ st_INT, st_FLOAT, st_STRING, st_BOOL} SymbolType;
+typedef struct Node Node;
+
+typedef struct SYMBOL {
+    char *name;
+    SymbolType type;
+    Node *val;
+    struct SYMBOL *next;
+} SYMBOL;
+
 typedef enum {
 	k_NodeKindProg,
 	k_NodeKindExpIdentifier,
@@ -35,10 +45,11 @@ typedef enum {
 	k_NodeKindStatementWhile,
 } NodeKind;
 
-typedef struct Node Node;
 struct Node {
 	int lineno;
 	NodeKind kind;
+	SYMBOL *symbol;		// optional
+	SymbolType type;	// optional
 	union {
 		char *identifier;
 		char* stringLiteral;
