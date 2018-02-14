@@ -17,6 +17,8 @@ int main(int argc, char **argv)
 	if (strcmp(argv[1], "pretty") == 0) mode = pretty;
 	if (strcmp(argv[1], "symbol") == 0) mode = symbol;
 
+	// printf("%s\n", argv[2]);
+
 	yyparse();
 	if (mode == parse) printf("OK\n");
 

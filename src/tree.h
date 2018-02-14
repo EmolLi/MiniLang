@@ -4,12 +4,19 @@
 #include <stdbool.h>
 
 typedef enum{ st_INT, st_FLOAT, st_STRING, st_BOOL} SymbolType;
+typedef union typeData{
+    char* stringLiteral;
+    int intLiteral;
+    float floatLiteral;
+    bool boolLiteral;
+} typeData;
 typedef struct Node Node;
 
 typedef struct SYMBOL {
     char *name;
     SymbolType type;
     Node *val;
+    typeData evalValue;
     struct SYMBOL *next;
 } SYMBOL;
 
@@ -50,6 +57,7 @@ struct Node {
 	NodeKind kind;
 	SYMBOL *symbol;		// optional
 	SymbolType type;	// optional
+    typeData evalValue;
 	union {
 		char *identifier;
 		char* stringLiteral;

@@ -31,7 +31,7 @@ SYMBOL *putSymbol(Node* declaration) {
     }
     SYMBOL *s = malloc(sizeof(SYMBOL));
     s->name = name;
-    s->val = declaration;   // defined point
+    s->val = declaration->val.declaration.exp;   // defined point value
     switch ((declaration->val.declaration.varType)->kind) {
         case k_NodeKindTypeInt:
             s->type = st_INT;
