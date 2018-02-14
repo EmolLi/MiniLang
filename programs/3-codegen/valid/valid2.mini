@@ -1,0 +1,24 @@
+var a: int = 1;
+var b: string = "dsd";
+var c: float = 1.9;
+if (a){
+    a = a*3;
+} else{
+    a = a + 3;
+}
+
+if (b == b) {
+    if (a){
+        if(c != c) {
+            print a;
+            read b;
+        }
+        print b;
+    } else {
+
+    }
+} else{
+    print a + b;
+}
+
+print "%#$\a\"fasdfafcxvgf2345tdf23.545saf'\\f\"" * a;

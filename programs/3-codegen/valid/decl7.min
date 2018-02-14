@@ -1,0 +1,6 @@
+// valid declaration, boolean type
+var x : boolean = TRUE;
+
+print x;
+read x;
+print x;

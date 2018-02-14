@@ -1,0 +1,9 @@
+// valid logical operators
+var x : boolean = TRUE;
+var y : int = 0;
+x = y == 0;
+x = y != 0;
+x = 0 && y == TRUE;
+x = x || y != TRUE;
+
+print x;

@@ -8,19 +8,36 @@ FILE* output;
 const char* filename;
 int indentation;
 
-void codeProgram(Node *n){
+
+void createFile(char* inputPath){
+    char outPath[strlen(inputPath)+2];
+	for (int i = strlen(inputPath)-1; i >= 0; i--) {
+		if (inputPath[i]=='.') {
+            memcpy(outPath, inputPath, i+1);
+            outPath[i+1] = 'c';
+            outPath[i+2] = '\0';
+			break;
+		}
+	}
+
+    output = fopen(outPath, "w");
+	return;
+}
+
+void codeProgram(Node *n, char* inputPath){
+    createFile(inputPath);
     codeInit();
     codeGenerate(n);
+    fprintf(output,"return 0;\n}\n");
+    fclose(output);
 }
 
 void codeInit(){
     indentation = 0;
     fprintf(output, "#include <stdio.h>\n");
     fprintf(output, "#include <stdlib.h>\n");
+    fprintf(output, "#include <stdbool.h>\n");
     fprintf(output, "#include <string.h>\n");
-    nextLine();
-    nextLine();
-    nextLine();
 
     // helper functions
     const char* stringAdd =
@@ -28,26 +45,33 @@ void codeInit(){
         "	char* result = (char*)malloc((strlen(str1) + strlen(str2) + 2) * sizeof(char));\n"
         "	strcpy(result, str1);\n"
         "	strcat(result, str2);\n"
-        "	return str;\n"
+        "	return result;\n"
         "}\n";
 
     const char* stringMult =
         "char* StringMult(char* str, int times){\n"
         "   if (times == 0) return \"\";\n"
-        "   if (times < 0) fprintf(stderr, \"Error: cannot multiple a string with a negative number.\\n\");"
+        "   if (times < 0) {\n"
+        "        fprintf(stderr, \"Error: cannot multiple a string with a negative number.\\n\");\n"
+        "        exit(1);\n"
+        "   }\n"
         "	char* result = (char*)malloc((strlen(str) + 2) * times * sizeof(char));\n"
-        "	strcpy(str, str1);\n"
-        "	strcat(str, str2);\n"
-        "	return str;\n"
+        "	strcpy(result, str);\n"
+        "   for(int i = 1; i < times; i++){\n"
+        "       strcat(result, str);\n"
+        "   }\n"
+        "	return result;\n"
         "}\n";
 
-    nextLine();
-    nextLine();
     fprintf(output, "%s", stringAdd);
     fprintf(output, "%s", stringMult);
-    fprintf(output, "int main(int argc, char **argv) {");
+    fprintf(output, "\n\n\n");
+
+    fprintf(output, "int main(int argc, char **argv) {\n");
+    fprintf(output, "\tint __tempboolBuffer;\n");
+    fprintf(output, "\tchar* __tempstrBuffer = (char*) malloc(1024);\n");
     indentation++;
-    nextLine();
+    indent();
 }
 
 void codeGenerate(Node* n){
@@ -93,8 +117,14 @@ void codeGenerate(Node* n){
                 break;
 
             case k_NodeKindStatementRead:
-                switch (n->type) {
+                switch (n->val.node->type) {
                     case st_BOOL:
+                        fprintf(output, "scanf(\"%%d\", &__tempboolBuffer)");
+                        nextLine();
+                        codeGenerate(n->val.node);
+                        fprintf(output, " = __tempboolBuffer");
+                        nextLine();
+                        return;
                     case st_INT:
                         fprintf(output, "scanf(\"%%d\", &");
                         break;
@@ -102,8 +132,13 @@ void codeGenerate(Node* n){
                         fprintf(output, "scanf(\"%%f\", &");
                         break;
                     case st_STRING:
-                        fprintf(output, "scanf(\"%%s\", &");
-                        break;
+
+                        fprintf(output, "scanf(\"%%s\", __tempstrBuffer)");
+                        nextLine();
+                        codeGenerate(n->val.node);
+                        fprintf(output, " = strdup(__tempstrBuffer)");
+                        nextLine();
+                        return;
                 }
 
                 codeGenerate(n->val.node);
@@ -112,7 +147,7 @@ void codeGenerate(Node* n){
                 break;
 
             case k_NodeKindStatementPrint:
-                switch (n->type) {
+                switch (n->val.node->type) {
                     case st_BOOL:
                     case st_INT:
                         fprintf(output, "printf(\"%%d\\n\", ");
@@ -121,7 +156,7 @@ void codeGenerate(Node* n){
                         fprintf(output, "printf(\"%%f\\n\", ");
                         break;
                     case st_STRING:
-                        fprintf(output, "printf(\"%%d\\n\", ");
+                        fprintf(output, "printf(\"%%s\\n\", ");
                         break;
                 }
                 codeGenerate(n->val.node);
@@ -139,16 +174,16 @@ void codeGenerate(Node* n){
             case k_NodeKindStatementIf:
                 fprintf(output, "if (");
                 codeGenerate(n->val.ifStatement.exp);
-                fprintf(output, "){");
+                fprintf(output, "){\n");
                 indentation++;
-                nextLine();
+                indent();
                 codeGenerate(n->val.ifStatement.statements);
-                fprintf(output, "} else { ");
-                nextLine();
+                fprintf(output, "} else {\n");
+                indent();
                 codeGenerate(n->val.ifStatement.elseStatement);
-                fprintf(output, "}");
+                fprintf(output, "}\n");
                 indentation--;
-                nextLine();
+                indent();
                 break;
 
             case k_NodeKindStatementElse:
@@ -159,13 +194,13 @@ void codeGenerate(Node* n){
             case k_NodeKindStatementWhile:
                 fprintf(output, "while (");
                 codeGenerate(n->val.whileStatement.exp);
-                fprintf(output, "){");
+                fprintf(output, "){\n");
                 indentation++;
-                nextLine();
+                indent();
                 codeGenerate(n->val.whileStatement.statements);
-                fprintf(output, "}");
+                fprintf(output, "}\n");
                 indentation--;
-                nextLine();
+                indent();
                 break;
 
             default:
@@ -179,11 +214,11 @@ void codeExp(Node* exp){
     // typeData sv = exp->symbol->evalValue;
     switch (exp->kind) {
         case k_NodeKindExpIdentifier:
-            fprintf(output, " %s\n", exp->val.identifier);
+            fprintf(output, " %s", exp->val.identifier);
             break;
 
         case k_NodeKindExpIntLiteral:
-            fprintf(output, " %d\n", exp->val.intLiteral);
+            fprintf(output, " %d", exp->val.intLiteral);
             break;
 
         case k_NodeKindExpFloatLiteral:
@@ -191,7 +226,7 @@ void codeExp(Node* exp){
             break;
 
         case k_NodeKindExpStringLiteral:
-            fprintf(output, " \"%s\"", exp->val.stringLiteral);
+            fprintf(output, " %s", exp->val.stringLiteral);
             break;
 
         case k_NodeKindExpBoolLiteral:

@@ -1,0 +1,7 @@
+// valid declaration, expression
+var x : int = 1 + 2;
+var y : int = x + 2;
+
+print x;
+read x;
+print x;

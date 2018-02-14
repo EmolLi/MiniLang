@@ -1,0 +1,4 @@
+// valid declaration, float type
+var x : float = 1.0;
+
+print x;

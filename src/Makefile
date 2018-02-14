@@ -17,4 +17,4 @@ lex.yy.c: mini.l parser.tab.h
 debug: mini.y
 	 rm mini.output; bison --verbose mini.y
 clean:
-	rm parser.tab.* lex.yy.*; rm *.o mini mini.tab.*
+	rm parser.tab.* lex.yy.*; rm *.o mini mini.tab.* ../programs/*/valid/*.c ../programs/*/valid/*.out ../programs/*/invalid/*.c ../programs/*/invalid/*.out

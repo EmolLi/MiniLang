@@ -1,0 +1,14 @@
+// valid boolean literals
+var x : boolean = TRUE;
+var y : boolean = FALSE;
+
+if (x !=y){
+    print 1;
+    if (!y){
+        print 2;
+    }
+    while (x){
+        print "x";
+        x = FALSE;
+    }
+}

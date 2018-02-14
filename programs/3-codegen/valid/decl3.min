@@ -1,0 +1,5 @@
+// valid identifiers with underscore
+var z_ : int = 0;
+var _z : int = 0;
+
+print z_;
