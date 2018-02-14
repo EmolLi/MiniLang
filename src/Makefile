@@ -2,8 +2,8 @@ CC = gcc
 
 CFLAGS = -Wall
 
-all: parser.tab.o lex.yy.o main.o tree.h tree.o pretty.h pretty.o symbol.h symbol.o type.h type.o
-	$(CC) lex.yy.o parser.tab.o tree.o pretty.o symbol.o type.o main.o -o mini -lfl
+all: parser.tab.o lex.yy.o main.o tree.h tree.o pretty.h pretty.o symbol.h symbol.o type.h type.o code.h code.o
+	$(CC) lex.yy.o parser.tab.o tree.o pretty.o symbol.o type.o code.o main.o -o mini -lfl
 
 scan: mini.l tree.h tree.o
 	make lex.yy.c; $(CC) lex.yy.c -o mini -lfl

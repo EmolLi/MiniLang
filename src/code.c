@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "code.h"
 #include "symbol.h"
@@ -42,6 +43,8 @@ void codeInit(){
 
     nextLine();
     nextLine();
+    fprintf(output, "%s", stringAdd);
+    fprintf(output, "%s", stringMult);
     fprintf(output, "int main(int argc, char **argv) {");
     indentation++;
     nextLine();
@@ -72,7 +75,7 @@ void codeGenerate(Node* n){
                 break;
 
             case k_NodeKindDeclaration:
-                codeGenerate(val.declaration.varType);
+                codeGenerate(n->val.declaration.varType);
                 codeGenerate(n->val.declaration.ident);
                 fprintf(output, " = ");
                 codeGenerate(n->val.declaration.exp);
@@ -199,13 +202,13 @@ void codeExp(Node* exp){
         case k_NodeKindExpUMinus:
             fprintf(output, " (-");
             codeExp(exp->val.node);
-            fprintf(")");
+            fprintf(output, ")");
             break;
 
         case k_NodeKindExpNeg:
             fprintf(output, " (!");
             codeExp(exp->val.node);
-            fprintf(")");
+            fprintf(output, ")");
             break;
 
         default:
@@ -332,6 +335,6 @@ void indent(){
 }
 
 void nextLine(){
-    fprintf(";\n");
+    fprintf(output, ";\n");
     indent();
 }
